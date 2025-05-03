@@ -79,8 +79,9 @@
                     Text(movie.overview)
                         .foregroundColor(.gray)
                         .lineLimit(3)
-                    Text("Release Date \(movie.releaseDate)")
+                    Text("Release Date: \(movie.releaseDate)")
                         .foregroundColor(.gray)
+                        .padding(.top)
                 }
             }
         }

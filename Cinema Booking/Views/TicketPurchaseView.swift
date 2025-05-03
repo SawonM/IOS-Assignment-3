@@ -41,6 +41,7 @@ struct TicketPurchaseView: View {
 
                             Text("Release Date \(viewModel.movie.releaseDate)")
                                 .foregroundColor(.gray)
+                                .padding(.top)
                         }
                     }
 
