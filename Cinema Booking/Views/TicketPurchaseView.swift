@@ -98,6 +98,7 @@ struct TicketPurchaseView: View {
 
                     Button(action: {
                         print("Seats: \(viewModel.seatIDs), Tickets: \(viewModel.ticketCounts)")
+                        bookings.append(BookingModel(movie: viewModel.movie, ticket: viewModel, showtime: showtime))
                     }) {
                         Text("PROCEED")
                             .padding(.vertical, 10)
