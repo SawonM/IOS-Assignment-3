@@ -7,6 +7,8 @@
 
 import Foundation
 
+var movies: [Movie] = []
+
 struct Movie: Identifiable, Decodable {
     let id: Int
     let title: String
@@ -40,5 +42,3 @@ struct CastMember: Decodable, Identifiable {
         case profilePath = "profile_path"
     }
 }
-
-
