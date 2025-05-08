@@ -15,8 +15,8 @@ struct BookingsView: View {
                 ForEach(bookingsList) { booking in
                     HStack(spacing: 0) {
                         Rectangle()
-                            .fill(Color.red)
-                            .frame(width: 6, height: 80)
+                            .fill(Color.blue)
+                            .frame(width: 6, height: 85)
                         HStack{
                             Image(systemName: "ticket")
                             VStack(alignment: .leading, spacing: 2) {
@@ -51,7 +51,7 @@ struct BookingsView: View {
                                 }
                             }) {
                                 Image(systemName: "xmark.circle")
-                                    .foregroundColor(.red)
+                                    .foregroundColor(.blue)
                             }
                         }
                         .padding()
