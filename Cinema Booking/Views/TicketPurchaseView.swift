@@ -1,9 +1,7 @@
-//
 //  TicketPurchaseView.swift
 //  Cinema Booking
 //
-//  Created by Soorya Narayanan Sanand on 3/5/2025.
-//
+//  Updated for light mode on 3/5/2025.
 
 import SwiftUI
 
@@ -33,7 +31,7 @@ struct TicketPurchaseView: View {
                             Text(viewModel.movie.title)
                                 .font(.title3)
                                 .bold()
-                                .foregroundColor(.white)
+                                .foregroundColor(.black)
 
                             Text(viewModel.movie.overview)
                                 .foregroundColor(.gray)
@@ -47,25 +45,25 @@ struct TicketPurchaseView: View {
 
                     HStack(spacing: 0) {
                         Rectangle()
-                            .fill(Color.red)
+                            .fill(Color.blue)
                             .frame(width: 6)
 
                         VStack(alignment: .leading, spacing: 2) {
                             Text(showtime.time)
-                                .foregroundColor(.white)
+                                .foregroundColor(.black)
                             Text("Location: \(showtime.location)")
                                 .foregroundColor(.gray)
                                 .font(.caption)
                         }
                         .padding()
                         .frame(maxWidth: .infinity, alignment: .leading)
-                        .background(Color(red: 0.15, green: 0.15, blue: 0.15))
+                        .background(Color(white: 0.95))
                     }
                     .cornerRadius(12)
 
                     HStack {
                         Text("Select Tickets")
-                            .foregroundColor(.white)
+                            .foregroundColor(.black)
                             .font(.headline)
                         Spacer()
                         Text("\(viewModel.totalTickets) / \(viewModel.seatIDs.count) tickets selected")
@@ -76,7 +74,7 @@ struct TicketPurchaseView: View {
                     VStack(spacing: 0) {
                         ForEach(viewModel.allTickets) { ticket in
                             ticketRow(ticket: ticket)
-                                .background(Color(red: 0.1, green: 0.1, blue: 0.1))
+                                .background(Color(white: 0.97))
                                 .overlay(
                                     Divider().background(Color.gray.opacity(0.3)),
                                     alignment: .bottom
@@ -91,7 +89,7 @@ struct TicketPurchaseView: View {
             VStack(spacing: 6) {
                 HStack {
                     Text("Total \(String(format: "$%.2f", viewModel.totalCost))")
-                        .foregroundColor(.white)
+                        .foregroundColor(.black)
                         .bold()
 
                     Spacer()
@@ -103,7 +101,7 @@ struct TicketPurchaseView: View {
                         Text("PROCEED")
                             .padding(.vertical, 10)
                             .padding(.horizontal, 24)
-                            .background(viewModel.totalTickets == viewModel.seatIDs.count ? Color.red : Color.gray)
+                            .background(viewModel.totalTickets == viewModel.seatIDs.count ? Color.blue : Color.gray)
                             .foregroundColor(.white)
                             .cornerRadius(12)
                     }
@@ -115,15 +113,15 @@ struct TicketPurchaseView: View {
                     .font(.caption)
             }
             .padding()
-            .background(Color.black)
+            .background(Color.white)
         }
-        .background(Color.black.ignoresSafeArea())
+        .background(Color.white.ignoresSafeArea())
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .principal) {
                 Text("CineQuick")
                     .font(.headline)
-                    .foregroundColor(.white)
+                    .foregroundColor(.blue)
             }
         }
     }
@@ -132,7 +130,7 @@ struct TicketPurchaseView: View {
     func ticketRow(ticket: TicketPurchaseViewModel.TicketOption) -> some View {
         HStack {
             Text(ticket.label)
-                .foregroundColor(.white)
+                .foregroundColor(.black)
                 .font(.subheadline)
                 .lineLimit(2)
                 .multilineTextAlignment(.leading)
@@ -140,7 +138,7 @@ struct TicketPurchaseView: View {
             Spacer()
 
             Text("$\(String(format: "%.2f", ticket.price))")
-                .foregroundColor(.white)
+                .foregroundColor(.black)
 
             let count = viewModel.ticketCounts[ticket.id] ?? 0
             if count > 0 {
@@ -149,18 +147,18 @@ struct TicketPurchaseView: View {
                         viewModel.decrement(ticket: ticket)
                     } label: {
                         Image(systemName: "minus.circle")
-                            .foregroundColor(.red)
+                            .foregroundColor(.blue)
                     }
 
                     Text("\(count)")
-                        .foregroundColor(.white)
+                        .foregroundColor(.black)
                         .frame(minWidth: 20)
 
                     Button {
                         viewModel.increment(ticket: ticket)
                     } label: {
                         Image(systemName: "plus.circle")
-                            .foregroundColor(.red)
+                            .foregroundColor(.blue)
                     }
                 }
                 .padding(.leading, 8)
@@ -170,10 +168,10 @@ struct TicketPurchaseView: View {
                 } label: {
                     Text("ADD")
                         .font(.subheadline)
-                        .foregroundColor(.white)
+                        .foregroundColor(.black)
                         .padding(.horizontal, 12)
                         .padding(.vertical, 6)
-                        .background(Color.gray.opacity(0.4))
+                        .background(Color.gray.opacity(0.2))
                         .cornerRadius(6)
                 }
                 .padding(.leading, 8)

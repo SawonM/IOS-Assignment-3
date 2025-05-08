@@ -1,15 +1,7 @@
-//
 //  CastSynopsisView.swift
 //  Cinema Booking
 //
-//  Created by Soorya Narayanan Sanand on 3/5/2025.
-//
-
-
-//  CastSynopsisView.swift
-//  Cinema Booking
-//
-//  Created by Soorya Narayanan Sanand on 3/5/2025.
+//  Updated for light mode on 3/5/2025.
 
 import SwiftUI
 
@@ -25,7 +17,7 @@ struct CastSynopsisView: View {
                 if !movie.overview.isEmpty {
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Synopsis")
-                            .foregroundColor(.white)
+                            .foregroundColor(.black)
                             .font(.headline)
 
                         Text(movie.overview)
@@ -37,7 +29,7 @@ struct CastSynopsisView: View {
                 if !cast.isEmpty {
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Cast")
-                            .foregroundColor(.white)
+                            .foregroundColor(.black)
                             .font(.headline)
 
                         ScrollView(.horizontal, showsIndicators: false) {
@@ -60,7 +52,7 @@ struct CastSynopsisView: View {
 
                                         Text(member.name)
                                             .font(.caption2)
-                                            .foregroundColor(.white)
+                                            .foregroundColor(.black)
                                             .lineLimit(1)
 
                                         Text(member.character)
@@ -77,7 +69,7 @@ struct CastSynopsisView: View {
             }
             .padding()
         }
-        .background(Color.black.ignoresSafeArea())
+        .background(Color.white.ignoresSafeArea())
         .onAppear {
             TMDBService.fetchCast(for: movie.id) { fetchedCast in
                 self.cast = fetchedCast
@@ -89,7 +81,7 @@ struct CastSynopsisView: View {
             ToolbarItem(placement: .principal) {
                 Text("CineQuick")
                     .font(.headline)
-                    .foregroundColor(.white)
+                    .foregroundColor(.blue)
             }
         }
     }
@@ -110,7 +102,7 @@ struct CastSynopsisView: View {
 
             VStack(alignment: .leading, spacing: 4) {
                 Text(movie.title)
-                    .foregroundColor(.white)
+                    .foregroundColor(.black)
                     .font(.title3)
                     .bold()
 
