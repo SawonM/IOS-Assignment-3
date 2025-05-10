@@ -15,6 +15,9 @@ struct MoviePickerView: View {
                     .onChange(of: filterName) {
                         filterList()
                     }
+                    .cornerRadius(4)
+                    .padding(.top, 10)
+                    .padding(.bottom, 20)
 
                 List(filteredMovies) { movie in
                     NavigationLink(destination: TimingSelectionView(movie: movie)) {
@@ -49,6 +52,7 @@ struct MoviePickerView: View {
             }
         }
     }
+
 
     func filterList() {
         if filterName.isEmpty {

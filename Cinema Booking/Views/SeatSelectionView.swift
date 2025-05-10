@@ -14,12 +14,14 @@ struct SeatSelectionView: View {
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
+            VStack() {
                 header
                 showtimeInfo
+                
                 Text("Choose your seats")
                     .foregroundColor(.black)
                     .font(.headline)
+                    .padding(10)
 
                 seatGrid
                 legend
@@ -40,6 +42,7 @@ struct SeatSelectionView: View {
                             .background(Color.blue)
                             .foregroundColor(.white)
                             .cornerRadius(12)
+                            .padding(10)
                     }
                 }
 
@@ -59,7 +62,7 @@ struct SeatSelectionView: View {
     }
 
     var header: some View {
-        HStack(alignment: .top, spacing: 16) {
+        HStack() {
             if let url = movie.posterURL {
                 AsyncImage(url: url) { phase in
                     if let image = phase.image {
@@ -105,6 +108,7 @@ struct SeatSelectionView: View {
             .background(Color(.white))
         }
         .cornerRadius(12)
+        .padding(.vertical, 20)
     }
 
     var seatGrid: some View {
@@ -118,7 +122,7 @@ struct SeatSelectionView: View {
                         let seatId = "\(row)\(col)"
                         Rectangle()
                             .fill(viewModel.seatColor(seatId))
-                            .frame(width: 28, height: 28)
+                            .frame(width: 26, height: 26)
                             .cornerRadius(4)
                             .onTapGesture {
                                 viewModel.toggleSeat(seatId)
@@ -135,7 +139,7 @@ struct SeatSelectionView: View {
             legendItem(color: .gray, label: "Unavailable")
             legendItem(color: .blue, label: "Selected")
         }
-        .padding(.top)
+        .padding(.vertical, 10)
     }
 
     func legendItem(color: Color, label: String) -> some View {

@@ -26,10 +26,10 @@ struct ContentView: View {
                     HomeView()
                 case .movies:
                     MoviePickerView().environmentObject(navigationHelper)
+                case .bookings:
+                    BookingsView().navigationTitle("Bookings")
                 case .settings:
                     SettingsView()
-                case .bookings:
-                    BookingsView()
             }
             HStack{
                 Group{
@@ -42,19 +42,19 @@ struct ContentView: View {
                         }
                     }
                     Button(action: {
-                        activeView = .bookings
-                    }) {
-                        VStack{
-                            Image(systemName: "ticket")
-                            Text("Bookings")
-                        }
-                    }
-                    Button(action: {
                         activeView = .movies
                     }) {
                         VStack{
                             Image(systemName: "film")
                             Text("Movies")
+                        }
+                    }
+                    Button(action: {
+                        activeView = .bookings
+                    }) {
+                        VStack{
+                            Image(systemName: "ticket")
+                            Text("Bookings")
                         }
                     }
                     Button(action: {
