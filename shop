@@ -1,0 +1,73 @@
+import SwiftUI
+
+struct Shop: Identifiable{
+    let id = UUID()
+    let name: String
+    let imageName: String
+    let price: Double
+    var quantity: Int
+}
+
+struct ContentView: View{
+    @State private var cart:[shop] = []
+    @State private var totalprice: Double = 0.0
+    @State private var totalItems = [
+        Shop(name: "Popcorn and drink combo", imageName:"popcornDrink", price: 19.90, quantity: 0),
+        Shop(name: "Nachos and drink combo", imageName: "nachosDrink", price: 19.90, quantity: 0),
+        Shop(name: "Hotdog and drink combo", imageName: "hotdogDrink", price: 19.90, quantity: 0),
+        Shop(name: "Donnut and drink combo", imageName: "donnutDrink", price: 19.90, quantity: 0)
+    ]
+    var body: some View{
+        VStack{
+            ForEach(shopItems){ items in 
+                HStack{
+                    Image("imageName)
+                        .resizable()
+                        .frame(width: 100, height: 100)
+                        .imageScale(.large)
+                        .foregroundStyle(.tint)
+
+        VStack(alignment:.leading){
+            Text(items.name)
+            .font(.headline)
+            Text("$\(items.price, specifier: "%.2f")")
+                .font(.subheadline)
+
+        HStack{
+            Button("-")
+            {updateQuantity(of: items, increase: false)}
+            Text("\(items.quantity)")
+            Button("+"){updateQuantity(of: items, increase: true)}
+
+        }
+        }
+                }
+        .padding()
+            }
+            Text("Total:$\(totalprice, specifier: "%.2f")")
+            .font(.title)
+            .padding()
+             
+            Button("Proceed"){
+                print("Proceed to checkout")
+            }
+            .padding()
+        }
+    }
+    func updateQuantity(of items: shopItems, increase: Bool){
+        if let index = shopItems.firsIndex(where: {$0.id == items.id}){
+            shopItems[index].quantity += increase ? 1 :(shopItems[index].quantity > 0 ? -1: 0)
+        }
+    }
+    func addToCart(_items: Shop){
+        if let index = shopItems.firstIndex(where: {$0.id == items.id}){
+        cart.append(shopItems[index])
+        totalprice += shopItems[index].price
+        }
+    }
+}
+struct ContentView_Previews:PreviewProvider{
+    static var previews: some views{
+
+    }
+}
