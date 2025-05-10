@@ -1,18 +1,21 @@
 import SwiftUI
 
 struct MoviePickerView: View {
+    @State private var movies: [Movie] = []
     @State private var filteredMovies: [Movie] = []
     @State private var filterName: String = ""
+
     var body: some View {
-        NavigationView{
-            VStack{
+        NavigationView {
+            VStack {
                 TextField("Search", text: $filterName)
                     .padding()
                     .frame(maxWidth: 360, maxHeight: 40)
                     .overlay(RoundedRectangle(cornerRadius: 4).stroke(Color.gray, lineWidth: 2))
-                    .onChange(of: filterName){
+                    .onChange(of: filterName) {
                         filterList()
                     }
+
                 List(filteredMovies) { movie in
                     NavigationLink(destination: TimingSelectionView(movie: movie)) {
                         HStack {
@@ -29,11 +32,8 @@ struct MoviePickerView: View {
                             }
 
                             VStack(alignment: .leading) {
-                                Text(movie.title)
-                                    .font(.headline)
-                                Text(movie.releaseDate)
-                                    .font(.caption)
-                                    .foregroundColor(.gray)
+                                Text(movie.title).font(.headline)
+                                Text(movie.releaseDate).font(.caption).foregroundColor(.gray)
                             }
                         }
                         .padding(.vertical, 4)
@@ -41,22 +41,26 @@ struct MoviePickerView: View {
                 }
                 .navigationTitle("Select a Movie")
                 .onAppear {
-                    filteredMovies = movies
+                    TMDBService.fetchPopularMovies { fetchedMovies in
+                        self.movies = fetchedMovies
+                        self.filteredMovies = fetchedMovies
+                    }
                 }
             }
-
         }
     }
-    
-    func filterList(){
+
+    func filterList() {
         if filterName.isEmpty {
-            filteredMovies = movies;
+            filteredMovies = movies
         } else {
             filteredMovies = movies.filter {
-                $0.title.lowercased().contains(filterName.lowercased()) }
+                $0.title.lowercased().contains(filterName.lowercased())
+            }
         }
     }
 }
+
 
 
 #Preview {

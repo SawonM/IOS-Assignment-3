@@ -22,9 +22,16 @@
                     return
                 }
 
-                let result = try? JSONDecoder().decode(MovieListResponse.self, from: data)
-                DispatchQueue.main.async {
-                    completion(result?.results ?? [])
+                do {
+                    let result = try JSONDecoder().decode(MovieListResponse.self, from: data)
+                    DispatchQueue.main.async {
+                        completion(result.results)
+                    }
+                } catch {
+                    print("❌ Network request failed:", error.localizedDescription)
+                    DispatchQueue.main.async {
+                        completion([])
+                    }
                 }
             }.resume()
         }

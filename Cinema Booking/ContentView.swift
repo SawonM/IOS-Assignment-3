@@ -12,25 +12,24 @@ struct ContentView: View {
     enum ActiveView {
         case home
         case movies
-        case food
         case settings
         case bookings
     }
+    
     @State private var activeView: ActiveView = .home
+    @StateObject private var navigationHelper = NavigationHelper()
     
     var body: some View {
         VStack{
             switch activeView {
-            case .home:
-                HomeView()
-            case .movies:
-                MoviePickerView()
-            case .food:
-                FoodView()
-            case .settings:
-                SettingsView()
-            case .bookings:
-                BookingsView()
+                case .home:
+                    HomeView()
+                case .movies:
+                    MoviePickerView().environmentObject(navigationHelper)
+                case .settings:
+                    SettingsView()
+                case .bookings:
+                    BookingsView()
             }
             HStack{
                 Group{
@@ -59,14 +58,6 @@ struct ContentView: View {
                         }
                     }
                     Button(action: {
-                        activeView = .food
-                    }) {
-                        VStack{
-                            Image(systemName: "popcorn")
-                            Text("Food")
-                        }
-                    }
-                    Button(action: {
                         activeView = .settings
                     }) {
                         VStack{
@@ -79,6 +70,12 @@ struct ContentView: View {
                 .font(.system(size: 12))
                 .foregroundColor(.black)
             }
+            .onChange(of: navigationHelper.rootActive) { oldValue, newValue in
+                if newValue {
+                    activeView = .home
+                    navigationHelper.rootActive = false
+                }
+            }
         }
         .onAppear {
             TMDBService.fetchPopularMovies { fetchedMovies in
@@ -87,6 +84,15 @@ struct ContentView: View {
         }
     }
 }
+
+class NavigationHelper: ObservableObject {
+    @Published var rootActive: Bool = false
+
+    func returnToRoot() {
+        rootActive = true
+    }
+}
+
 
 #Preview {
     ContentView()
