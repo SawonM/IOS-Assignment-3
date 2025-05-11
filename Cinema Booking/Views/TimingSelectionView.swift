@@ -1,9 +1,7 @@
-//
 //  TimingSelectionView.swift
 //  Cinema Booking
 //
-//  Created by Soorya Narayanan Sanand on 3/5/2025.
-//
+//  Updated for light mode on 3/5/2025.
 
 import SwiftUI
 
@@ -50,7 +48,7 @@ struct TimingSelectionView: View {
                 }) {
                     HStack {
                         Text("Cast & Synopsis")
-                            .foregroundColor(.white)
+                            .foregroundColor(.black)
                             .font(.headline)
                         Spacer()
                         Image(systemName: showDetails ? "chevron.up" : "chevron.down")
@@ -64,7 +62,7 @@ struct TimingSelectionView: View {
                         if !movie.overview.isEmpty {
                             VStack(alignment: .leading, spacing: 4) {
                                 Text("Synopsis")
-                                    .foregroundColor(.white)
+                                    .foregroundColor(.black)
                                     .font(.subheadline)
                                 Text(movie.overview)
                                     .foregroundColor(.gray)
@@ -75,7 +73,7 @@ struct TimingSelectionView: View {
                         if !cast.isEmpty {
                             VStack(alignment: .leading, spacing: 4) {
                                 Text("Cast")
-                                    .foregroundColor(.white)
+                                    .foregroundColor(.black)
                                     .font(.subheadline)
 
                                 ScrollView(.horizontal, showsIndicators: false) {
@@ -98,7 +96,7 @@ struct TimingSelectionView: View {
 
                                                 Text(member.name)
                                                     .font(.caption2)
-                                                    .foregroundColor(.white)
+                                                    .foregroundColor(.black)
                                                     .lineLimit(1)
 
                                                 Text(member.character)
@@ -117,7 +115,7 @@ struct TimingSelectionView: View {
                 }
 
                 Text("Times and Tickets")
-                    .foregroundColor(.white)
+                    .foregroundColor(.black)
                     .font(.title2)
                     .bold()
 
@@ -133,13 +131,13 @@ struct TimingSelectionView: View {
             }
             .padding()
         }
-        .background(Color.black.ignoresSafeArea())
+        .background(Color.white.ignoresSafeArea())
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .principal) {
                 Text("CineQuick")
                     .font(.headline)
-                    .foregroundColor(.white)
+                    .foregroundColor(.blue)
             }
         }
         .onAppear {
@@ -165,7 +163,7 @@ struct TimingSelectionView: View {
 
             VStack(alignment: .leading, spacing: 4) {
                 Text(movie.title)
-                    .foregroundColor(.white)
+                    .foregroundColor(.black)
                     .font(.title3)
                     .bold()
 
@@ -189,7 +187,7 @@ struct TimingSelectionView: View {
                             .foregroundColor(index == selectedDateIndex ? .white : .gray)
                             .padding(.horizontal, 16)
                             .padding(.vertical, 8)
-                            .background(index == selectedDateIndex ? Color.red : Color(red: 0.2, green: 0.2, blue: 0.2))
+                            .background(index == selectedDateIndex ? Color.blue : Color(white: 0.85))
                             .cornerRadius(8)
                     }
                 }
@@ -200,12 +198,12 @@ struct TimingSelectionView: View {
     func showtimeCard(showtime: TheatreShowtime) -> some View {
         HStack(spacing: 0) {
             Rectangle()
-                .fill(Color.red)
+                .fill(Color.blue)
                 .frame(width: 6)
 
             VStack(alignment: .leading, spacing: 2) {
                 Text(showtime.time)
-                    .foregroundColor(.white)
+                    .foregroundColor(.black)
                     .font(.headline)
 
                 Text("Location: \(showtime.location)")
@@ -214,7 +212,7 @@ struct TimingSelectionView: View {
             }
             .padding()
             .frame(maxWidth: .infinity, alignment: .leading)
-            .background(Color(red: 0.15, green: 0.15, blue: 0.15))
+            .background(Color(white: 0.95))
         }
         .cornerRadius(12)
     }

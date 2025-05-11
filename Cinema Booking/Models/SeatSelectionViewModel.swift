@@ -20,11 +20,11 @@ class SeatSelectionViewModel: ObservableObject {
 
     func seatColor(_ seatId: String) -> Color {
         if selectedSeats.contains(seatId) {
-            return .red
+            return .blue
         } else if unavailableSeats.contains(seatId) {
             return .gray
         } else {
-            return .white
+            return .black
         }
     }
 

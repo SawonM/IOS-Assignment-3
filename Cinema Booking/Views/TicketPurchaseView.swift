@@ -1,137 +1,166 @@
-//
 //  TicketPurchaseView.swift
 //  Cinema Booking
 //
-//  Created by Soorya Narayanan Sanand on 3/5/2025.
-//
+//  Updated for light mode on 3/5/2025.
 
 import SwiftUI
 
 struct TicketPurchaseView: View {
     @ObservedObject var viewModel: TicketPurchaseViewModel
     let showtime: TheatreShowtime
+    @State private var showingSuccessView = false
+    @Environment(\.presentationMode) var presentationMode
+    @State private var navigateToHome = false
+    @EnvironmentObject var navigationHelper: NavigationHelper
 
     var body: some View {
         VStack(spacing: 0) {
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
-
-                    HStack(alignment: .top, spacing: 16) {
-                        if let url = viewModel.movie.posterURL {
-                            AsyncImage(url: url) { phase in
-                                if let image = phase.image {
-                                    image.resizable()
-                                } else {
-                                    Color.gray
-                                }
-                            }
-                            .frame(width: 100, height: 150)
-                            .cornerRadius(8)
-                        }
-
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text(viewModel.movie.title)
-                                .font(.title3)
-                                .bold()
-                                .foregroundColor(.white)
-
-                            Text(viewModel.movie.overview)
-                                .foregroundColor(.gray)
-                                .lineLimit(3)
-
-                            Text("Release Date \(viewModel.movie.releaseDate)")
-                                .foregroundColor(.gray)
-                                .padding(.top)
-                        }
-                    }
-
-                    HStack(spacing: 0) {
-                        Rectangle()
-                            .fill(Color.red)
-                            .frame(width: 6)
-
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text(showtime.time)
-                                .foregroundColor(.white)
-                            Text("Location: \(showtime.location)")
-                                .foregroundColor(.gray)
-                                .font(.caption)
-                        }
-                        .padding()
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .background(Color(red: 0.15, green: 0.15, blue: 0.15))
-                    }
-                    .cornerRadius(12)
-
-                    HStack {
-                        Text("Select Tickets")
-                            .foregroundColor(.white)
-                            .font(.headline)
-                        Spacer()
-                        Text("\(viewModel.totalTickets) / \(viewModel.seatIDs.count) tickets selected")
-                            .foregroundColor(.gray)
-                            .font(.subheadline)
-                    }
-
-                    VStack(spacing: 0) {
-                        ForEach(viewModel.allTickets) { ticket in
-                            ticketRow(ticket: ticket)
-                                .background(Color(red: 0.1, green: 0.1, blue: 0.1))
-                                .overlay(
-                                    Divider().background(Color.gray.opacity(0.3)),
-                                    alignment: .bottom
-                                )
-                        }
-                    }
-                    .cornerRadius(12)
+                    MovieInfoSection(movie: viewModel.movie)
+                    ShowtimeInfoSection(showtime: showtime)
+                    TicketSelectionSection(viewModel: viewModel)
                 }
                 .padding()
             }
 
-            VStack(spacing: 6) {
-                HStack {
-                    Text("Total \(String(format: "$%.2f", viewModel.totalCost))")
-                        .foregroundColor(.white)
-                        .bold()
-
-                    Spacer()
-
-                    Button(action: {
-                        print("Seats: \(viewModel.seatIDs), Tickets: \(viewModel.ticketCounts)")
-                    }) {
-                        Text("PROCEED")
-                            .padding(.vertical, 10)
-                            .padding(.horizontal, 24)
-                            .background(viewModel.totalTickets == viewModel.seatIDs.count ? Color.red : Color.gray)
-                            .foregroundColor(.white)
-                            .cornerRadius(12)
-                    }
-                    .disabled(viewModel.totalTickets != viewModel.seatIDs.count)
+            TotalSection(
+                viewModel: viewModel,
+                onProceed: {
+                    let booking = BookingModel(
+                        movie: viewModel.movie,
+                        ticket: viewModel,
+                        showtime: showtime
+                    )
+                    bookings.append(booking)
+                    showingSuccessView = true
                 }
-
-                Text("inc. Booking Fees $\(String(format: "%.2f", viewModel.bookingFee))")
-                    .foregroundColor(.gray)
-                    .font(.caption)
-            }
-            .padding()
-            .background(Color.black)
+            )
         }
-        .background(Color.black.ignoresSafeArea())
+        .background(Color.white.ignoresSafeArea())
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .principal) {
                 Text("CineQuick")
                     .font(.headline)
-                    .foregroundColor(.white)
+                    .foregroundColor(.blue)
+            }
+        }
+        .fullScreenCover(isPresented: $showingSuccessView) {
+            CheckoutSuccessView()
+                .environmentObject(navigationHelper)
+        }
+        .background(
+            NavigationLink(destination: HomeView(), isActive: $navigateToHome) {
+                HomeView()
+            }
+            .hidden()
+        )
+        .onChange(of: navigateToHome) { oldValue, newValue in
+            if newValue {
+                presentationMode.wrappedValue.dismiss()
             }
         }
     }
+}
 
-    @ViewBuilder
-    func ticketRow(ticket: TicketPurchaseViewModel.TicketOption) -> some View {
+struct MovieInfoSection: View {
+    let movie: Movie
+
+    var body: some View {
+        HStack(alignment: .top, spacing: 16) {
+            if let url = movie.posterURL {
+                AsyncImage(url: url) { phase in
+                    if let image = phase.image {
+                        image.resizable()
+                    } else {
+                        Color.gray
+                    }
+                }
+                .frame(width: 100, height: 150)
+                .cornerRadius(8)
+            }
+
+            VStack(alignment: .leading, spacing: 4) {
+                Text(movie.title)
+                    .font(.title3)
+                    .bold()
+                    .foregroundColor(.black)
+
+                Text(movie.overview)
+                    .foregroundColor(.gray)
+                    .lineLimit(3)
+
+                Text("Release Date \(movie.releaseDate)")
+                    .foregroundColor(.gray)
+                    .padding(.top)
+            }
+        }
+    }
+}
+
+struct ShowtimeInfoSection: View {
+    let showtime: TheatreShowtime
+
+    var body: some View {
+        HStack(spacing: 0) {
+            Rectangle()
+                .fill(Color.blue)
+                .frame(width: 6)
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text(showtime.time)
+                    .foregroundColor(.black)
+                Text("Location: \(showtime.location)")
+                    .foregroundColor(.gray)
+                    .font(.caption)
+            }
+            .padding()
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(Color(white: 0.95))
+        }
+        .cornerRadius(12)
+    }
+}
+
+struct TicketSelectionSection: View {
+    @ObservedObject var viewModel: TicketPurchaseViewModel
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack {
+                Text("Select Tickets")
+                    .foregroundColor(.black)
+                    .font(.headline)
+                Spacer()
+                Text("\(viewModel.totalTickets) / \(viewModel.seatIDs.count) tickets selected")
+                    .foregroundColor(.gray)
+                    .font(.subheadline)
+            }
+
+            VStack(spacing: 0) {
+                ForEach(viewModel.allTickets) { ticket in
+                    TicketRowView(ticket: ticket, viewModel: viewModel)
+                        .background(Color(white: 0.97))
+                        .overlay(
+                            Divider().background(Color.gray.opacity(0.3)),
+                            alignment: .bottom
+                        )
+                }
+            }
+            .cornerRadius(12)
+        }
+    }
+}
+
+struct TicketRowView: View {
+    let ticket: TicketPurchaseViewModel.TicketOption
+    @ObservedObject var viewModel: TicketPurchaseViewModel
+
+    var body: some View {
         HStack {
             Text(ticket.label)
-                .foregroundColor(.white)
+                .foregroundColor(.black)
                 .font(.subheadline)
                 .lineLimit(2)
                 .multilineTextAlignment(.leading)
@@ -139,7 +168,7 @@ struct TicketPurchaseView: View {
             Spacer()
 
             Text("$\(String(format: "%.2f", ticket.price))")
-                .foregroundColor(.white)
+                .foregroundColor(.black)
 
             let count = viewModel.ticketCounts[ticket.id] ?? 0
             if count > 0 {
@@ -148,18 +177,18 @@ struct TicketPurchaseView: View {
                         viewModel.decrement(ticket: ticket)
                     } label: {
                         Image(systemName: "minus.circle")
-                            .foregroundColor(.red)
+                            .foregroundColor(.blue)
                     }
 
                     Text("\(count)")
-                        .foregroundColor(.white)
+                        .foregroundColor(.black)
                         .frame(minWidth: 20)
 
                     Button {
                         viewModel.increment(ticket: ticket)
                     } label: {
                         Image(systemName: "plus.circle")
-                            .foregroundColor(.red)
+                            .foregroundColor(.blue)
                     }
                 }
                 .padding(.leading, 8)
@@ -169,15 +198,48 @@ struct TicketPurchaseView: View {
                 } label: {
                     Text("ADD")
                         .font(.subheadline)
-                        .foregroundColor(.white)
+                        .foregroundColor(.black)
                         .padding(.horizontal, 12)
                         .padding(.vertical, 6)
-                        .background(Color.gray.opacity(0.4))
+                        .background(Color.gray.opacity(0.2))
                         .cornerRadius(6)
                 }
                 .padding(.leading, 8)
             }
         }
         .padding()
+    }
+}
+
+struct TotalSection: View {
+    @ObservedObject var viewModel: TicketPurchaseViewModel
+    var onProceed: () -> Void
+
+    var body: some View {
+        VStack(spacing: 6) {
+            HStack {
+                Text("Total \(String(format: "$%.2f", viewModel.totalCost))")
+                    .foregroundColor(.black)
+                    .bold()
+
+                Spacer()
+
+                Button(action: onProceed) {
+                    Text("PROCEED")
+                        .padding(.vertical, 10)
+                        .padding(.horizontal, 24)
+                        .background(viewModel.totalTickets == viewModel.seatIDs.count ? Color.blue : Color.gray)
+                        .foregroundColor(.white)
+                        .cornerRadius(12)
+                }
+                .disabled(viewModel.totalTickets != viewModel.seatIDs.count)
+            }
+
+            Text("inc. Booking Fees $\(String(format: "%.2f", viewModel.bookingFee))")
+                .foregroundColor(.gray)
+                .font(.caption)
+        }
+        .padding()
+        .background(Color.white)
     }
 }
